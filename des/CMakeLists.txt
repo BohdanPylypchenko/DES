@@ -4,10 +4,17 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 11)
 
 set(HEADER_FILES
-        permut/permut.h)
+        permut/permut.h
+        byte.h
+        bitbyte/bitbyte_seq/bitbyte_seq.h
+        bitbyte/bitbyte_operator/bitbyte_operator.h
+        bitbyte/bitbyte_io/bitbyte_io.h)
 
 set(SOURCE_FILES
-        permut/permut.c)
+        permut/permut.c
+        bitbyte/bitbyte_seq/bitbyte_seq.c
+        bitbyte/bitbyte_operator/bitbyte_operator.c
+        bitbyte/bitbyte_io/bitbyte_io.c)
 
 add_library(DES STATIC ${SOURCE_FILES} ${HEADER_FILES})
 
