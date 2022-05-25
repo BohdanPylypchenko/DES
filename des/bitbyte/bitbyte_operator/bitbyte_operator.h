@@ -18,4 +18,18 @@ bitbyte_seq *bitbyte_left_shift_m(const bitbyte_seq *b, const int count);
  */
 bitbyte_seq *bitbyte_XOR(const bitbyte_seq *a, const bitbyte_seq *b);
 
+/*
+ * bitbyte_split
+ * if bit size of original % count != 0,
+ * function behavior is undefined
+ * returns bit size of 1 part
+ */
+bitbyte_seq **bitbyte_split(const bitbyte_seq *original, const int count);
+
+/*
+ * Joins given array of bitbyte_seq in 1 structure
+ * returns size of joined bitbyte_seq
+ */
+bitbyte_seq *bitbyte_join(bitbyte_seq **parts, const int count);
+
 #endif
