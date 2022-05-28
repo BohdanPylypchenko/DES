@@ -2,9 +2,7 @@
 
 #include "bitbyte/bitbyte_seq/bitbyte_seq.h"
 
-#include <limits.h>
 #include <malloc.h>
-#include <memory.h>
 
 /*
  * private left shift method declaration
@@ -45,15 +43,15 @@ bitbyte_seq *bitbyte_XOR(const bitbyte_seq *a, const bitbyte_seq *b) {
 
 /*
  * bitbyte_split implementation
- * if bit size of original % count != 0,
+ * if bit size of origin % count != 0,
  * function behavior is undefined
  */
-bitbyte_seq **bitbyte_split(const bitbyte_seq *original, const int count) {
+bitbyte_seq **bitbyte_split(const bitbyte_seq *origin, const int count) {
     // Allocating parts array
     bitbyte_seq **parts = (bitbyte_seq **) malloc(count * sizeof(bitbyte_seq *));
 
     // Calculating new common bit size for each new part
-    int new_bit_size = bitbyte_get_size_bit(original) / count;
+    int new_bit_size = bitbyte_get_size_bit(origin) / count;
 
     // Creating parts
     for (int i = 0; i < count; i++) {
@@ -64,7 +62,7 @@ bitbyte_seq **bitbyte_split(const bitbyte_seq *original, const int count) {
     for (int i = 0; i < count; i++) {
         for (int j = 0; j < new_bit_size; j++) {
             bitbyte_set_bit(parts[i], j,
-                            bitbyte_get_bit(original, i * new_bit_size + j));
+                            bitbyte_get_bit(origin, i * new_bit_size + j));
         }
     }
 
@@ -97,6 +95,22 @@ bitbyte_seq *bitbyte_join(bitbyte_seq **parts, const int count) {
 
     // Returning
     return result;
+}
+
+/*
+ * Clone method implementation
+ */
+bitbyte_seq *bitbyte_clone(bitbyte_seq *origin) {
+    // Creating new bitbyte_seq instance
+    bitbyte_seq *cloned = bitbyte_zero(bitbyte_get_size_bit(origin));
+
+    // Cloning bits
+    for (int i = 0; i < bitbyte_get_size_bit(cloned); i++) {
+        bitbyte_set_bit(cloned, i, bitbyte_get_bit(origin, i));
+    }
+
+    // Returning cloned
+    return cloned;
 }
 
 /*

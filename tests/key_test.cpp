@@ -1,21 +1,12 @@
 #include "gtest/gtest.h"
 
 extern "C" {
+#include "test_utils/test_utils.h"
+
 #include "key/key.h"
 #include "bitbyte/bitbyte_seq/bitbyte_seq.h"
 
 #include <stdio.h>
-}
-
-/*
- * converts string literal to bitbyte_seq
- */
-static bitbyte_seq *get_from_str(const char *str, const int size) {
-    bitbyte_seq *result = bitbyte_zero(size);
-    for (int i = 0; i < size; i++) {
-        bitbyte_set_bit(result, i, str[i] - '0');
-    }
-    return result;
 }
 
 /*

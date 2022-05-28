@@ -20,16 +20,21 @@ bitbyte_seq *bitbyte_XOR(const bitbyte_seq *a, const bitbyte_seq *b);
 
 /*
  * bitbyte_split
- * if bit size of original % count != 0,
+ * if bit size of origin % count != 0,
  * function behavior is undefined
  * returns bit size of 1 part
  */
-bitbyte_seq **bitbyte_split(const bitbyte_seq *original, const int count);
+bitbyte_seq **bitbyte_split(const bitbyte_seq *origin, const int count);
 
 /*
  * Joins given array of bitbyte_seq in 1 structure
  * returns size of joined bitbyte_seq
  */
 bitbyte_seq *bitbyte_join(bitbyte_seq **parts, const int count);
+
+/*
+ * Creates full copy of given bitbyte_seq
+ */
+bitbyte_seq *bitbyte_clone(bitbyte_seq *origin);
 
 #endif
