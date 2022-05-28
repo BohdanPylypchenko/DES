@@ -9,12 +9,12 @@
 /*
  * Byte nth bit getter
  */
-#define GET_LNB(b, n) (b >> (7 - n)) & 1
+#define GET_LNB(b, n) (b >> (7 - (n))) & 1
 
 /*
  * Byte nth bit setter
  */
-#define SET_LNB(b, n, x) b ^= (-x ^ b) & (1 << (7 - n))
+#define SET_LNB(b, n, x) b ^= (-x ^ b) & (1 << (7 - (n)))
 
 /*
  * Print BYTE in binary macros

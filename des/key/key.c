@@ -7,7 +7,7 @@
 #include "sodium.h"
 
 // defines left shift count for each subkey iteration
-static const SHIFT[16] = { 1,1,2,2,2,2,2,2,1,2,2,2,2,2,2,1 };
+static const short SHIFT[16] = { 1,1,2,2,2,2,2,2,1,2,2,2,2,2,2,1 };
 
 /*
  * Initial key generator implementation

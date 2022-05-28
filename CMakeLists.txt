@@ -11,3 +11,4 @@ add_subdirectory(des)
 target_link_libraries(DES_Demo DES -lsodium)
 
 add_subdirectory(tests)
+add_subdirectory(tests/test_utils)
