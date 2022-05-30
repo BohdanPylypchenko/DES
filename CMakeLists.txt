@@ -4,7 +4,9 @@ project(DES_Demo C)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(DES_Demo main.c)
+set(CMAKE_C_FLAGS "-march=skylake")
+
+add_executable(DES_Demo main.c demo_io/option_keeper/option_keeper.c demo_io/option_keeper/option_keeper.h demo_io/io_utils/io_utils.c demo_io/io_utils/io_utils.h demo/demo_run.c demo/demo_run.h)
 
 include_directories(des)
 add_subdirectory(des)
