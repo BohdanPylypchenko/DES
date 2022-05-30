@@ -235,14 +235,16 @@ TEST(bitbyte_seq, write_read){
 /*
  * half split test
  */
-TEST(bitbyte_seq, split2) {
+TEST(bitbyte_seq, split8) {
     // Creating test sequence
     bitbyte_seq *b = get_test_sequence();
 
     // Splitting in 2
-    bitbyte_seq **parts = bitbyte_split(b, 2);
+    bitbyte_seq **parts;
+    int count = bitbyte_split(b, 8, &parts);
 
     // Asserting
+    ASSERT_EQ(count, 2);
     ASSERT_EQ(bitbyte_get_size_bit(parts[0]), 8);
     ASSERT_EQ(bitbyte_get_size_bit(parts[1]), 8);
     ASSERT_EQ(bitbyte_get_size_byte(parts[0]), 1);
@@ -260,7 +262,7 @@ TEST(bitbyte_seq, split2) {
 /*
  * triple split test
  */
-TEST(bitbyte_seq, split3) {
+TEST(bitbyte_seq, split6) {
     // Creating special bitbyte_seq
     bitbyte_seq *origin = bitbyte_zero(18);
     for (int i = 0; i < bitbyte_get_size_bit(origin); i++) {
@@ -271,9 +273,11 @@ TEST(bitbyte_seq, split3) {
     bitbyte_set_bit(origin, 7, 1);
 
     // 3 split
-    bitbyte_seq **parts = bitbyte_split(origin, 3);
+    bitbyte_seq **parts;
+    int count = bitbyte_split(origin, 6, &parts);
 
     // Asserting
+    ASSERT_EQ(count, 3);
     ASSERT_EQ(bitbyte_get_size_bit(parts[0]), 6);
     ASSERT_EQ(bitbyte_get_size_bit(parts[1]), 6);
     ASSERT_EQ(bitbyte_get_size_bit(parts[2]), 6);
@@ -294,6 +298,67 @@ TEST(bitbyte_seq, split3) {
     bitbyte_free(parts[0]);
     bitbyte_free(parts[1]);
     bitbyte_free(parts[2]);
+    free(parts);
+}
+
+/*
+ * bitbyte_get_size_bit(origin) < part_size_bit test
+ */
+TEST(bitbyte_seq, split18) {
+    // Getting test sequence
+    bitbyte_seq *b = get_test_sequence();
+
+    // Splitting
+    bitbyte_seq **parts;
+    int count = bitbyte_split(b, 18, &parts);
+
+    // Asserting
+    ASSERT_EQ(count, 1);
+    ASSERT_EQ(bitbyte_get_size_bit(parts[0]), 18);
+    ASSERT_EQ(bitbyte_get_size_byte(parts[0]), 3);
+    BYTE expected[3] = { 7, 7, 0};
+    for (int i = 0; i < 3; i++) {
+        ASSERT_EQ(bitbyte_get_byte(parts[0], i), expected[i]);
+    }
+
+    // Deallocating
+    b = bitbyte_free(b);
+    bitbyte_free(parts[0]);
+    free(parts);
+}
+
+/*
+ * bitbyte_get_size_bit(origin) % part_size_bit != 0 test
+ */
+TEST(bitbyte_seq, split5) {
+    // Getting test sequence
+    bitbyte_seq *b = get_test_sequence();
+
+    // Splitting
+    bitbyte_seq **parts;
+    int count = bitbyte_split(b, 5, &parts);
+
+    // Asserting
+    ASSERT_EQ(count, 4);
+    for (int i = 0; i < count; i++) {
+        ASSERT_EQ(bitbyte_get_size_bit(parts[i]), 5);
+        ASSERT_EQ(bitbyte_get_size_byte(parts[i]), 1);
+    }
+    BYTE expected[4][5] = { { 0, 0, 0, 0, 0 },
+                            { 1, 1, 1, 0, 0 },
+                            { 0, 0, 0, 1, 1 },
+                            { 1, 0, 0, 0, 0 } };
+    for (int i = 0; i < count; i++) {
+        for (int j = 0; j < bitbyte_get_size_bit(parts[i]); j++) {
+            ASSERT_EQ(bitbyte_get_bit(parts[i], j), expected[i][j]);
+        }
+    }
+
+    // Deallocating
+    b = bitbyte_free(b);
+    for (int i = 0; i < count; i++) {
+        bitbyte_free(parts[i]);
+    }
     free(parts);
 }
 

@@ -16,7 +16,8 @@ bitbyte_seq *des(bitbyte_seq *origin, bitbyte_seq *subkeys[16]) {
     bitbyte_seq *ip = permut_IP(origin);
 
     // Half split
-    bitbyte_seq **parts = bitbyte_split(ip, 2);
+    bitbyte_seq **parts;
+    bitbyte_split(ip, 32, &parts);
     bitbyte_seq *l0 = parts[0];
     bitbyte_seq *r0 = parts[1];
 

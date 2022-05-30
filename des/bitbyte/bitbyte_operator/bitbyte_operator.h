@@ -19,22 +19,33 @@ bitbyte_seq *bitbyte_left_shift_m(const bitbyte_seq *b, const int count);
 bitbyte_seq *bitbyte_XOR(const bitbyte_seq *a, const bitbyte_seq *b);
 
 /*
- * bitbyte_split
- * if bit size of origin % count != 0,
- * function behavior is undefined
- * returns bit size of 1 part
+ * Creates full copy of given bitbyte_seq
  */
-bitbyte_seq **bitbyte_split(const bitbyte_seq *origin, const int count);
+bitbyte_seq *bitbyte_clone(bitbyte_seq *origin);
+
+/*
+ * Splits origin bitbyte_seq
+ * in parts, each part_bit_size bits.
+ * Returns count of parts.
+ *
+ * If bitbyte_get_size_bit(origin) < part_bit_size,
+ * single bitbyte_seq with size part_bit_size created,
+ * all bits from origin are copied, other bits are zero.
+ *
+ * If bitbyte_get_size_bit(origin) % part_bit_size == 0,
+ * just split
+ * Else just split + 1 bitbyte_seq with
+ * bitbyte_get_size_bit(origin) - (count - 1) * part_bit_size
+ * copied as last origin bits.
+ * Other bits are zero.
+ */
+int bitbyte_split(const bitbyte_seq *origin, const int part_bit_size,
+                  bitbyte_seq ***result);
 
 /*
  * Joins given array of bitbyte_seq in 1 structure
  * returns size of joined bitbyte_seq
  */
 bitbyte_seq *bitbyte_join(bitbyte_seq **parts, const int count);
-
-/*
- * Creates full copy of given bitbyte_seq
- */
-bitbyte_seq *bitbyte_clone(bitbyte_seq *origin);
 
 #endif
