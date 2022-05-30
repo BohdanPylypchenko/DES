@@ -15,7 +15,9 @@ bitbyte_seq *des_f_func(const bitbyte_seq *r, const bitbyte_seq *subkey) {
     bitbyte_seq *xor = bitbyte_XOR(expansion, subkey);
 
     // sboxes
-    bitbyte_seq **xor_split = bitbyte_split(xor, 8);
+    //bitbyte_seq **xor_split = bitbyte_split(xor, 8);
+    bitbyte_seq **xor_split;
+    bitbyte_split(xor, 6, &xor_split);
     bitbyte_seq *sboxed[8];
     sboxed[0] = sbox1(xor_split[0]);
     sboxed[1] = sbox2(xor_split[1]);

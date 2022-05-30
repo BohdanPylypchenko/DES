@@ -34,7 +34,8 @@ bitbyte_seq **key_subkeys(const bitbyte_seq *key64) {
     bitbyte_seq *key56 = permut_KP1(key64);
 
     // Half split
-    bitbyte_seq **cd = bitbyte_split(key56, 2);
+    bitbyte_seq **cd;
+    bitbyte_split(key56, 28, &cd);
 
     // Cycling
     bitbyte_seq **subkeys = (bitbyte_seq **) malloc(16 * sizeof(bitbyte_seq *));

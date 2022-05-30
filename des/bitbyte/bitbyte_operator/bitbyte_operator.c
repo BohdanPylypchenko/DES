@@ -43,31 +43,85 @@ bitbyte_seq *bitbyte_XOR(const bitbyte_seq *a, const bitbyte_seq *b) {
 
 /*
  * bitbyte_split implementation
- * if bit size of origin % count != 0,
- * function behavior is undefined
  */
-bitbyte_seq **bitbyte_split(const bitbyte_seq *origin, const int count) {
-    // Allocating parts array
-    bitbyte_seq **parts = (bitbyte_seq **) malloc(count * sizeof(bitbyte_seq *));
+int bitbyte_split(const bitbyte_seq *origin, const int part_bit_size,
+                  bitbyte_seq ***result) {
 
-    // Calculating new common bit size for each new part
-    int new_bit_size = bitbyte_get_size_bit(origin) / count;
+    bitbyte_seq **parts;
 
-    // Creating parts
-    for (int i = 0; i < count; i++) {
-        parts[i] = bitbyte_zero(new_bit_size);
-    }
+    // origin bit size < part bit size branch
+    if (bitbyte_get_size_bit(origin) < part_bit_size) {
+        // Creating bitbyte_seq * array with len = 1
+        parts = (bitbyte_seq **) malloc(sizeof(bitbyte_seq *));
 
-    // Copying
-    for (int i = 0; i < count; i++) {
-        for (int j = 0; j < new_bit_size; j++) {
-            bitbyte_set_bit(parts[i], j,
-                            bitbyte_get_bit(origin, i * new_bit_size + j));
+        // Creating new bitbyte_seq with zeroes
+        parts[0] = bitbyte_zero(part_bit_size);
+
+        // Copying from origin
+        for (int i = 0; i < bitbyte_get_size_bit(origin); i++) {
+            bitbyte_set_bit(parts[0], i, bitbyte_get_bit(origin, i));
         }
+
+        // Returning
+        *result = parts;
+        return 1;
     }
 
-    // Returning
-    return parts;
+    // Count of parts after split
+    int count;
+
+    // origin bit size is integer dividable by part bit size
+    if (bitbyte_get_size_bit(origin) % part_bit_size == 0) {
+        // Calculating count of parts
+        count = bitbyte_get_size_bit(origin) / part_bit_size;
+
+        // Allocating memory
+        parts = (bitbyte_seq **) malloc(count * sizeof(bitbyte_seq *));
+
+        // Creating parts
+        for (int i = 0; i < count; i++) {
+            parts[i] = bitbyte_zero(part_bit_size);
+        }
+
+        // Copying
+        for (int i = 0; i < count; i++) {
+            for (int j = 0; j < part_bit_size; j++) {
+                bitbyte_set_bit(parts[i], j,
+                                bitbyte_get_bit(origin, i * part_bit_size + j));
+            }
+        }
+
+        // Returning
+        *result = parts;
+        return count;
+    } else {
+        // Calculating count of parts
+        count = bitbyte_get_size_bit(origin) / part_bit_size + 1;
+
+        // Allocating memory
+        parts = (bitbyte_seq **) malloc(count * sizeof(bitbyte_seq *));
+
+        // Creating parts
+        for (int i = 0; i < count; i++) {
+            parts[i] = bitbyte_zero(part_bit_size);
+        }
+
+        for (int i = 0; i < count - 1; i++) {
+            for (int j = 0; j < part_bit_size; j++) {
+                bitbyte_set_bit(parts[i], j,
+                                bitbyte_get_bit(origin, i * part_bit_size + j));
+            }
+        }
+
+        for (int i = 0; i < bitbyte_get_size_bit(origin) - (count - 1) * part_bit_size; i++) {
+            bitbyte_set_bit(parts[count - 1], i,
+                            bitbyte_get_bit(origin, (count - 1) * part_bit_size + i));
+        }
+
+        // Returning
+        *result = parts;
+        return count;
+    }
 }
 
 /*

@@ -20,7 +20,8 @@ TEST(sbox, test_all) {
     bitbyte_seq *in = get_from_str(in_str, 48);
 
     // Splitting
-    bitbyte_seq **parts = bitbyte_split(in, 8);
+    bitbyte_seq **parts;
+    bitbyte_split(in, 6, &parts);
 
     // sboxing
     bitbyte_seq *sboxed[8];
