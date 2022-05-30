@@ -8,11 +8,11 @@
 /*
  * bitbyte_seq writer
  */
-void bitbyte_write(FILE *f, bitbyte_seq *b);
+void bitbyte_write(const FILE *f, const bitbyte_seq *b);
 
 /*
  * bitbyte_seq reader
  */
-void bitbyte_read(FILE *f, bitbyte_seq **b);
+void bitbyte_read(const FILE *f, bitbyte_seq **b);
 
 #endif
